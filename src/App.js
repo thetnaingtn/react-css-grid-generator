@@ -1,25 +1,29 @@
-import logo from './logo.svg';
+import React from 'react';
+
+import { AppGrid, AppForm, AppHeader } from './components';
+import { GridProvider } from './context/gridContext';
+import { FormProvider } from "./context/formContext";
+
+
+// import './assets/styles/main.scss';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	return (
+
+		<div id="app">
+			<AppHeader />
+			<section className="container">
+				<FormProvider>
+					<GridProvider>
+						<AppGrid />
+						<AppForm />
+					</GridProvider>
+				</FormProvider>
+			</section>
+		</div>
+
+	)
 }
 
 export default App;
