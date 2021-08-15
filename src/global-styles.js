@@ -1,8 +1,11 @@
-import { createGlobalStyle } from 'styled-components';
+import { createGlobalStyle } from "styled-components";
 
 export const GlobalStyles = createGlobalStyle`
-    $teal: #08ffbd;
-    $grey : #aaaaaa;
+    html{
+        --grey: #aaaaaa;
+        --teal: #08ffbd;
+        --gray: var(--grey, #aaaaaa);
+    }
 
     * {
         box-sizing: border-box;
@@ -80,29 +83,29 @@ export const GlobalStyles = createGlobalStyle`
 
     button {
         background: transparent;
-        color: #08ffbd;
+        color: var(--teal);
         padding: 4px 30px 5px;
         border-radius: 1000px;
-        border: 1px solid #08ffbd;
+        border: 1px solid var(--teal);
         font-size: 16px;
         margin: 20px 0 0;
         cursor: pointer;
         transition: 0.35s all;
 
         &:hover {
-            background: #08ffbd;
+            background: var(--teal);
             color: black;
         }
     }
 
     [type="reset"] {
-        color: #aaaaaa;
-        border: 1px solid #aaaaaa;
+        color: var(--grey);
+        border: 1px solid var(--grey);
 
         &:hover {
-            background: #aaaaaa;
+            background: var(--grey);
             color: black;
         }
     }
 
-`
+`;
