@@ -5,6 +5,7 @@ import {
   Grid,
   GridChildren,
   GridChildrenArea,
+  StyledError,
 } from "./styles";
 
 import validator from "../../utils/validatator";
@@ -108,7 +109,7 @@ export default function AppGrid() {
               onBlur={(event) => colSizeChangeHandler(index, event)}
             />
             {errors.col.indexOf(index) !== -1 ? (
-              <div className="errors">Must use real CSS unit.</div>
+              <StyledError>Must use real CSS unit.</StyledError>
             ) : null}
           </div>
         ))}

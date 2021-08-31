@@ -41,3 +41,15 @@ export const GridChildrenArea = styled.section`
 export const GridChildren = styled.div`
   grid-area: ${({ childArea }) => childArea};
 `;
+
+export const StyledError = styled.div`
+  position: absolute;
+  bottom: -5px;
+  border-radius: 4px;
+  padding: 8px 12px;
+  z-index: 1;
+  font-weight: bold;
+  width: 150px;
+  min-height: 50px;
+  background: #6d1a39;
+`;
