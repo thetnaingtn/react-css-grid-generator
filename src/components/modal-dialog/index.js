@@ -73,7 +73,6 @@ const AppModal = function ({ children, modalHandler, modalStatus }) {
         memoizedModalHandler(false);
       }
     }
-    console.log("called me");
     document.addEventListener("keydown", closeOnEsc);
     return () => document.removeEventListener("keydown", closeOnEsc);
   }, [memoizedModalHandler]);
