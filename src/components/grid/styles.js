@@ -18,10 +18,19 @@ export const AppGridColumnSizeSelector = styled.section`
 `;
 
 export const AppGridRowSizeSelector = styled.section`
+  margin-left: -70px;
+  float: left;
+  height: 100%;
+  display: grid;
   grid-template-columns: 50px;
   grid-template-rows: ${({ rowTemplate }) => rowTemplate};
   column-gap: ${({ columnGap }) => `${columnGap}px`};
   row-gap: ${({ rowGap }) => `${rowGap}px`};
+  div {
+    align-self: center;
+    text-align: center;
+    position: relative;
+  }
 `;
 
 export const Grid = styled.section`

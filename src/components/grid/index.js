@@ -44,7 +44,6 @@ export default function AppGrid() {
     let unit = event.target.value;
     let columnErrors = validator(errors, unit, index, "col");
     if (columnErrors.col.length) {
-      console.log("here");
       setErrors(columnErrors);
       return;
     }
@@ -115,7 +114,6 @@ export default function AppGrid() {
         ))}
       </AppGridColumnSizeSelector>
       <AppGridRowSizeSelector
-        className="rowunits"
         rowTemplate={rowTemplate}
         rowGap={rowGap}
         columnGap={columnGap}
