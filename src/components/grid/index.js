@@ -1,18 +1,18 @@
 import React, { useContext, useState, useEffect } from "react";
 import {
+  AppGridMain,
   AppGridColumnSizeSelector,
   AppGridRowSizeSelector,
   Grid,
   GridChildren,
   GridChildrenArea,
   StyledError,
+  AppGridContainer,
 } from "./styles";
 
 import validator from "../../utils/validatator";
 import GridContext from "../../context/gridContext";
 import FormContext from "../../context/formContext";
-
-import "../../assets/styles/app-grid.scss";
 
 export default function AppGrid() {
   let { rowGap, columnGap, columns } = useContext(FormContext);
@@ -93,7 +93,7 @@ export default function AppGrid() {
   }, [child]);
 
   return (
-    <main>
+    <AppGridMain>
       <AppGridColumnSizeSelector
         rowGap={rowGap}
         columnGap={columnGap}
@@ -128,7 +128,7 @@ export default function AppGrid() {
           </div>
         ))}
       </AppGridRowSizeSelector>
-      <div id="gridcontainer">
+      <AppGridContainer>
         <Grid
           colTemplate={columnTemplate}
           rowTemplate={rowTemplate}
@@ -145,7 +145,6 @@ export default function AppGrid() {
           ))}
         </Grid>
         <GridChildrenArea
-          className="gridchild"
           colTemplate={columnTemplate}
           rowTemplate={rowTemplate}
           columnGap={columnGap}
@@ -157,7 +156,7 @@ export default function AppGrid() {
             </GridChildren>
           ))}
         </GridChildrenArea>
-      </div>
-    </main>
+      </AppGridContainer>
+    </AppGridMain>
   );
 }

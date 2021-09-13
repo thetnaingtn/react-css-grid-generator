@@ -14,6 +14,44 @@ function generateGridChildStyle(max) {
     .join("");
 }
 
+export const AppGridMain = styled.main`
+  width: calc(70vw - 50px);
+  height: calc(70vh - 50px);
+  margin: 15px 0 0 75px;
+  @media screen and (max-width: 700px) {
+    main {
+      width: calc(80vw - 50px);
+      height: calc(40vh - 50px);
+    }
+  }
+`;
+
+export const AppGridContainer = styled.div`
+  border: 1px solid #08ffbd;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  position: relative;
+  background: #131321; /* Old browsers */
+  background: -moz-linear-gradient(
+    top,
+    #131321 0%,
+    #1f1c2c 100%
+  ); /* FF3.6-15 */
+  background: -webkit-linear-gradient(
+    top,
+    #131321 0%,
+    #1f1c2c 100%
+  ); /* Chrome10-25,Safari5.1-6 */
+  background: linear-gradient(
+    to bottom,
+    #131321 0%,
+    #1f1c2c 100%
+  ); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+  filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#131321', endColorstr='#1f1c2c',GradientType=0 ); /* IE6-9 */
+  box-shadow: 0 2px 20px 0 #000;
+`;
+
 export const AppGridColumnSizeSelector = styled.section`
   display: grid;
   grid-template-columns: ${({ colTemplate }) => colTemplate};
@@ -47,12 +85,15 @@ export const AppGridRowSizeSelector = styled.section`
   }
 `;
 
-export const Grid = styled.section`
+const GridStyles = styled.section`
   width: 100%;
   height: 100%;
   position: absolute;
   display: grid;
   grid-auto-flow: row dense;
+`;
+
+export const Grid = styled(GridStyles)`
   grid-template-columns: ${({ colTemplate }) => colTemplate};
   grid-template-rows: ${({ rowTemplate }) => rowTemplate};
   column-gap: ${({ columnGap }) => `${columnGap}px`};
@@ -72,13 +113,31 @@ export const Grid = styled.section`
   }
 `;
 
-export const GridChildrenArea = styled.section`
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  display: grid;
-  grid-auto-flow: row dense;
+export const GridChildrenArea = styled(GridStyles)`
   ${generateGridChildStyle(20)}
+  counter-reset: step;
+  div {
+    counter-increment: step;
+    position: relative;
+    &:before {
+      position: absolute;
+      content: ".div" counter(step);
+      display: block;
+      padding: 0 5px;
+      text-align: center;
+      color: white;
+    }
+    button {
+      position: absolute;
+      right: 0;
+      padding: 0 5px;
+      margin: 0;
+      color: white;
+      background-color: transparent;
+      border: none;
+      z-index: 99999;
+    }
+  }
   grid-template-columns: ${({ colTemplate }) => colTemplate};
   grid-template-rows: ${({ rowTemplate }) => rowTemplate};
   column-gap: ${({ columnGap }) => `${columnGap}px`};
