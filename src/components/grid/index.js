@@ -130,7 +130,6 @@ export default function AppGrid() {
       </AppGridRowSizeSelector>
       <div id="gridcontainer">
         <Grid
-          className="grid"
           colTemplate={columnTemplate}
           rowTemplate={rowTemplate}
           rowGap={rowGap}
@@ -146,7 +145,7 @@ export default function AppGrid() {
           ))}
         </Grid>
         <GridChildrenArea
-          className="grid gridchild"
+          className="gridchild"
           colTemplate={columnTemplate}
           rowTemplate={rowTemplate}
           columnGap={columnGap}
