@@ -1,9 +1,24 @@
-import "../../assets/styles/app-header.scss";
+import styled from "styled-components/macro";
 
+const StylesNav = styled.nav`
+  font-size: 40px;
+  font-weight: 700;
+  margin-bottom: 40px;
+  text-shadow: 0px 2px 5px #000;
+  text-align: center;
+`;
+
+const StylesLogo = styled.svg`
+  vertical-align: middle;
+  margin-top: -3px;
+  .logo {
+    fill: var(--teal);
+  }
+`;
 export default function AppHeader() {
   return (
-    <nav>
-      <svg
+    <StylesNav>
+      <StylesLogo
         xmlns="http://www.w3.org/2000/svg"
         viewBox="0 0 100 100"
         width="50"
@@ -15,8 +30,8 @@ export default function AppHeader() {
           <path d="M88.584 34.084v-1H22.416v1zM88.584 78.084v-1H22.416v1zM88.584 56.084v-1H22.416v1zM88.584 45.084v-1H22.416v1zM89.084 67.084v-1H22.916v1zM13 18.5h1V89h-1zM18 14v-1h71v1z"></path>
           <path d="M88 9h1v9h-1zM9 89v-1h9v1z"></path>
         </g>
-      </svg>
+      </StylesLogo>
       CSS Grid Generator
-    </nav>
+    </StylesNav>
   );
 }
