@@ -6,7 +6,6 @@ import { Wrapper } from "./container/wrapper";
 import { GridProvider } from "./context/gridContext";
 import { FormProvider } from "./context/formContext";
 
-// import './assets/styles/main.scss';
 import "./App.css";
 
 function App() {
