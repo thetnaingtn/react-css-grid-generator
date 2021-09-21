@@ -6,8 +6,6 @@ import { Wrapper } from "./container/wrapper";
 import { GridProvider } from "./context/gridContext";
 import { FormProvider } from "./context/formContext";
 
-import "./App.css";
-
 function App() {
   return (
     <div id="app">
