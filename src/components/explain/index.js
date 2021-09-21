@@ -1,7 +1,6 @@
 import React from "react";
 import styled from "styled-components";
 import { ExplainStyles } from "./styles";
-import "../../assets/styles/app-explain.scss";
 
 const StylesCursive = styled.p`
   font-family: "Caveat", cursive;
