@@ -106,6 +106,9 @@ export const GlobalStyles = createGlobalStyle`
             background: var(--grey);
             color: black;
         }
+        @media screen and (max-width:700px){
+            margin-left: 20px;
+        }
     }
 
 `;

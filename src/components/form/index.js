@@ -21,12 +21,6 @@ const StyledControlPanel = styled.aside`
   margin: 60px 60px;
   font-size: 17px;
   width: 300px;
-  button[type="reset"] {
-    @media screen and (max-width: 700px) {
-      width: 80vw;
-      margin: 100px 50px;
-    }
-  }
   @media screen and (max-width: 700px) {
     width: 80vw;
     margin: 100px 50px;

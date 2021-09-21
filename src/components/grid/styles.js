@@ -19,10 +19,8 @@ export const AppGridMain = styled.main`
   height: calc(70vh - 50px);
   margin: 15px 0 0 75px;
   @media screen and (max-width: 700px) {
-    main {
-      width: calc(80vw - 50px);
-      height: calc(40vh - 50px);
-    }
+    width: calc(80vw - 50px);
+    height: calc(40vh - 50px);
   }
 `;
 
