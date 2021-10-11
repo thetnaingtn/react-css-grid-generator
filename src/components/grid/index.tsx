@@ -31,9 +31,7 @@ export default function AppGrid() {
   let [child, setChild] = useState({});
   let [startEnd, setStartEnd] = useState(undefined);
 
-  let divs = [];
-  divs.length = divNum;
-  divs = divs.fill(undefined);
+  let divs = Array(divNum).fill(0) as number[];
 
   useEffect(() => {
     console.log(errors.col);
