@@ -11,7 +11,7 @@ import {
   Sp,
 } from "./styles/code";
 
-function Code({
+export default function Code({
   children,
   ...restProps
 }: PropsWithChildren<HTMLAttributes<{}>>) {
