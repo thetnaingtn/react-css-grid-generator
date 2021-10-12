@@ -21,6 +21,11 @@ type ChildType = {
   scol: number;
 };
 
+export type ErrorType = {
+  col: number[];
+  row: number[];
+};
+
 export default function AppGrid() {
   let { rowGap, columnGap, columns } = useContext(FormContext);
   let {
@@ -34,7 +39,7 @@ export default function AppGrid() {
     childArea,
     setChildArea,
   } = useContext(GridContext);
-  let [errors, setErrors] = useState<{ col: number[]; row: number[] }>({
+  let [errors, setErrors] = useState<ErrorType>({
     col: [],
     row: [],
   });
