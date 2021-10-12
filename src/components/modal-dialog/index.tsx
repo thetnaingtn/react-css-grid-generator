@@ -3,7 +3,6 @@ import React, {
   useCallback,
   ReactNode,
   PropsWithChildren,
-  ReactChild,
 } from "react";
 import styled from "styled-components/macro";
 
@@ -65,7 +64,7 @@ const StyledModalBody = styled.section`
 
 /* 
 	modal styled components 
-	start
+	end
 */
 
 type AppModalType = {
