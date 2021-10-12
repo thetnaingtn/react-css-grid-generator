@@ -1,6 +1,25 @@
 import styled, { css } from "styled-components/macro";
 
-function generateGridChildStyle(max) {
+type GapType = {
+  columnGap: number;
+  rowGap: number;
+};
+
+type ColumnSizeSelectorType = GapType & {
+  widthFull: boolean;
+  colTemplate: string;
+};
+
+type RowSizeSelectorType = GapType & {
+  rowTemplate: string;
+};
+
+type GridType = GapType & {
+  rowTemplate: string;
+  colTemplate: string;
+};
+
+function generateGridChildStyle(max: number) {
   let color = 300 / max,
     divs = Array(max).fill(0);
   return divs
@@ -50,7 +69,7 @@ export const AppGridContainer = styled.div`
   box-shadow: 0 2px 20px 0 #000;
 `;
 
-export const AppGridColumnSizeSelector = styled.section`
+export const AppGridColumnSizeSelector = styled.section<ColumnSizeSelectorType>`
   display: grid;
   grid-template-columns: ${({ colTemplate }) => colTemplate};
   grid-template-rows: 50px;
@@ -60,14 +79,14 @@ export const AppGridColumnSizeSelector = styled.section`
     text-align: center;
     position: relative;
   }
-  ${({ widthfull }) =>
-    widthfull &&
+  ${({ widthFull }) =>
+    widthFull &&
     css`
       width: 100%;
     `}
 `;
 
-export const AppGridRowSizeSelector = styled.section`
+export const AppGridRowSizeSelector = styled.section<RowSizeSelectorType>`
   margin-left: -70px;
   float: left;
   height: 100%;
@@ -91,7 +110,7 @@ const GridStyles = styled.section`
   grid-auto-flow: row dense;
 `;
 
-export const Grid = styled(GridStyles)`
+export const Grid = styled(GridStyles)<GridType>`
   grid-template-columns: ${({ colTemplate }) => colTemplate};
   grid-template-rows: ${({ rowTemplate }) => rowTemplate};
   column-gap: ${({ columnGap }) => `${columnGap}px`};
@@ -111,7 +130,7 @@ export const Grid = styled(GridStyles)`
   }
 `;
 
-export const GridChildrenArea = styled(GridStyles)`
+export const GridChildrenArea = styled(GridStyles)<GridType>`
   ${generateGridChildStyle(20)}
   counter-reset: step;
   div {
@@ -142,7 +161,7 @@ export const GridChildrenArea = styled(GridStyles)`
   row-gap: ${({ rowGap }) => `${rowGap}px`};
 `;
 
-export const GridChildren = styled.div`
+export const GridChildren = styled.div<{ childArea: string }>`
   grid-area: ${({ childArea }) => childArea};
 `;
 

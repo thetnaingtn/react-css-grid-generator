@@ -34,11 +34,14 @@ export default function AppGrid() {
     childArea,
     setChildArea,
   } = useContext(GridContext);
-  let [errors, setErrors] = useState({ col: [], row: [] });
+  let [errors, setErrors] = useState<{ col: number[]; row: number[] }>({
+    col: [],
+    row: [],
+  });
   let [child, setChild] = useState<ChildType>({} as ChildType);
   let [startEnd, setStartEnd] = useState<string | undefined>(undefined);
 
-  const divs = Array(divNum).fill(0) as number[];
+  const divs = Array<number>(divNum).fill(0);
 
   useEffect(() => {
     console.log(errors.col);
@@ -111,7 +114,7 @@ export default function AppGrid() {
         rowGap={rowGap}
         columnGap={columnGap}
         colTemplate={columnTemplate}
-        widthfull={columns > 8}
+        widthFull={columns > 8}
       >
         {colArr.map((col, index) => (
           <div key={index}>
