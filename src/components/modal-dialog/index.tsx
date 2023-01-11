@@ -1,4 +1,9 @@
-import React, { useEffect, useCallback } from "react";
+import React, {
+  useEffect,
+  useCallback,
+  ReactNode,
+  PropsWithChildren,
+} from "react";
 import styled from "styled-components/macro";
 
 /* 
@@ -59,16 +64,25 @@ const StyledModalBody = styled.section`
 
 /* 
 	modal styled components 
-	start
+	end
 */
 
-const AppModal = function ({ children, modalHandler, modalStatus }) {
+type AppModalType = {
+  modalHandler: (val: boolean) => void;
+  modalStatus: boolean;
+};
+
+const AppModal = function ({
+  children,
+  modalHandler,
+  modalStatus,
+}: PropsWithChildren<AppModalType>) {
   const memoizedModalHandler = useCallback(
-    () => modalHandler(),
+    (val: boolean) => modalHandler(val),
     [modalHandler]
   );
   useEffect(() => {
-    function closeOnEsc(event) {
+    function closeOnEsc(event: KeyboardEvent) {
       if (event.keyCode === 27) {
         memoizedModalHandler(false);
       }
@@ -92,11 +106,11 @@ const AppModal = function ({ children, modalHandler, modalStatus }) {
   );
 };
 
-AppModal.Header = function ({ children }) {
+AppModal.Header = function ({ children }: { children: ReactNode }) {
   return <StyledModalHeader id="modalTitle">{children}</StyledModalHeader>;
 };
 
-AppModal.Section = function ({ children }) {
+AppModal.Section = function ({ children }: { children: ReactNode }) {
   return <StyledModalBody id="modalDescription">{children}</StyledModalBody>;
 };
 

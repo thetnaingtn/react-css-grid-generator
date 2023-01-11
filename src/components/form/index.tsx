@@ -52,7 +52,7 @@ export default function AppForm() {
           min={0}
           max={12}
           value={columns}
-          onChange={(event) => setColumns(event.target.value)}
+          onChange={(event) => setColumns(+event.target.value)}
         />
       </fieldset>
       <fieldset>
@@ -63,7 +63,7 @@ export default function AppForm() {
           min={0}
           max={12}
           value={rows}
-          onChange={(event) => setRows(event.target.value)}
+          onChange={(event) => setRows(+event.target.value)}
         />
       </fieldset>
       <fieldset>
@@ -74,7 +74,7 @@ export default function AppForm() {
           min={0}
           max={50}
           value={columnGap}
-          onChange={(event) => setColumnGap(event.target.value)}
+          onChange={(event) => setColumnGap(+event.target.value)}
         />
       </fieldset>
       <fieldset>
@@ -85,7 +85,7 @@ export default function AppForm() {
           min={0}
           max={50}
           value={rowGap}
-          onChange={(event) => setRowGap(event.target.value)}
+          onChange={(event) => setRowGap(+event.target.value)}
         />
       </fieldset>
       <button onClick={() => setCodeModalStatus(true)}>

@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, FocusEvent } from "react";
 import {
   AppGridMain,
   AppGridColumnSizeSelector,
@@ -14,6 +14,18 @@ import validator from "../../utils/validatator";
 import GridContext from "../../context/gridContext";
 import FormContext from "../../context/formContext";
 
+type ChildType = {
+  erow: number;
+  ecol: number;
+  srow: number;
+  scol: number;
+};
+
+export type ErrorType = {
+  col: number[];
+  row: number[];
+};
+
 export default function AppGrid() {
   let { rowGap, columnGap, columns } = useContext(FormContext);
   let {
@@ -27,52 +39,61 @@ export default function AppGrid() {
     childArea,
     setChildArea,
   } = useContext(GridContext);
-  let [errors, setErrors] = useState({ col: [], row: [] });
-  let [child, setChild] = useState({});
-  let [startEnd, setStartEnd] = useState(undefined);
+  let [errors, setErrors] = useState<ErrorType>({
+    col: [],
+    row: [],
+  });
+  let [child, setChild] = useState<ChildType>({} as ChildType);
+  let [startEnd, setStartEnd] = useState<string | undefined>(undefined);
 
-  let divs = [];
-  divs.length = divNum;
-  divs = divs.fill(undefined);
+  const divs = Array<number>(divNum).fill(0);
 
   useEffect(() => {
     console.log(errors.col);
   }, [errors.col]);
 
-  function colSizeChangeHandler(index, event) {
-    event.preventDefault();
-    let unit = event.target.value;
-    let columnErrors = validator(errors, unit, index, "col");
-    if (columnErrors.col.length) {
-      setErrors(columnErrors);
-      return;
-    }
-    setColArr(
-      colArr.map((i, idx) => (idx === index ? { unit: event.target.value } : i))
-    );
+  function colSizeChangeHandler(index: number) {
+    return function (event: FocusEvent<HTMLInputElement>) {
+      event.preventDefault();
+      let unit = event.target.value;
+      let columnErrors = validator(errors, unit, index, "col");
+      if (columnErrors.col.length) {
+        setErrors(columnErrors);
+        return;
+      }
+      setColArr(
+        colArr.map((i, idx) =>
+          idx === index ? { unit: event.target.value } : i
+        )
+      );
+    };
   }
 
-  function rowSizeChangeHandler(index, event) {
-    event.preventDefault();
-    let unit = event.target.value;
-    let rowErrors = validator(errors, unit, index, "row");
-    if (rowErrors.row.length) {
-      setErrors(rowErrors);
-      return;
-    }
-    setRowArr(
-      rowArr.map((i, idx) => (idx === index ? { unit: event.target.value } : i))
-    );
+  function rowSizeChangeHandler(index: number) {
+    return function (event: FocusEvent<HTMLInputElement>) {
+      event.preventDefault();
+      let unit = event.target.value;
+      let rowErrors = validator(errors, unit, index, "row");
+      if (rowErrors.row.length) {
+        setErrors(rowErrors);
+        return;
+      }
+      setRowArr(
+        rowArr.map((i, idx) =>
+          idx === index ? { unit: event.target.value } : i
+        )
+      );
+    };
   }
 
-  function placeChild(item, startend) {
+  function placeChild(item: number, startend: string) {
     setStartEnd(startend);
     let row = Math.ceil(item / columns);
     let column = item - (row - 1) * columns;
     setChild({ ...child, [`${startend}row`]: row, [`${startend}col`]: column });
   }
 
-  function deleteChild(area) {
+  function deleteChild(area: string) {
     let newArea = childArea.filter((c) => c !== area);
     setChildArea(newArea);
   }
@@ -98,14 +119,14 @@ export default function AppGrid() {
         rowGap={rowGap}
         columnGap={columnGap}
         colTemplate={columnTemplate}
-        widthfull={columns > 8}
+        widthFull={columns > 8}
       >
         {colArr.map((col, index) => (
           <div key={index}>
             <input
               defaultValue={col.unit}
               type="text"
-              onBlur={(event) => colSizeChangeHandler(index, event)}
+              onBlur={colSizeChangeHandler(index)}
             />
             {errors.col.indexOf(index) !== -1 ? (
               <StyledError>Must use real CSS unit.</StyledError>
@@ -123,7 +144,7 @@ export default function AppGrid() {
             <input
               defaultValue={row.unit}
               type="text"
-              onBlur={(event) => rowSizeChangeHandler(index, event)}
+              onBlur={rowSizeChangeHandler(index)}
             />
           </div>
         ))}
