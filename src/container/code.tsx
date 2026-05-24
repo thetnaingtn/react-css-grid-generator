@@ -1,9 +1,23 @@
-import React, { useState, useContext, useRef, MouseEventHandler } from "react";
+import { useState, useContext, useRef, MouseEventHandler } from "react";
 
 import GridContext from "../context/gridContext";
 import FormContext from "../context/formContext";
 
 import { AppCode } from "../components";
+
+const cName = "text-code-name";
+const cProps = "text-code-props";
+const cKey = "text-code-key";
+const sp = "pl-5";
+
+const gridCode =
+  "relative bg-gradient-to-b from-panel-start to-panel-end shadow-[0_2px_20px_0_#000] p-[15px] rounded border border-teal text-[15px] font-mono max-h-[50vh] overflow-y-scroll [&>p]:m-[5px]";
+
+const buttonCopy =
+  "absolute right-0 top-0 m-0 bg-copy-btn px-3 py-2 rounded-tl-none rounded-tr rounded-br-none rounded-bl font-sans cursor-pointer";
+
+const buttonToggle =
+  "absolute right-[5px] bottom-[5px] font-sans cursor-pointer";
 
 export default function AppCodeContainer() {
   let { rowGap, columnGap } = useContext(FormContext);
@@ -12,7 +26,7 @@ export default function AppCodeContainer() {
   let [codeWasCopied, setCodeWasCopied] = useState(false);
   let codeRef = useRef<HTMLDivElement | null>(null);
 
-  const copy: MouseEventHandler = (event) => {
+  const copy: MouseEventHandler = () => {
     setCodeWasCopied(true);
     let text = codeRef.current;
     let selection = window.getSelection();
@@ -31,41 +45,43 @@ export default function AppCodeContainer() {
 
   return (
     <AppCode>
-      <AppCode.Title>Copy the code below:</AppCode.Title>
-      <AppCode.GridCode>
-        <AppCode.ButtonToggle
+      <h3>Copy the code below:</h3>
+      <div className={gridCode}>
+        <button
+          className={buttonToggle}
           onClick={() => setShowHtml(!showHtml)}
           role="region"
           type="button"
         >
           {showHtml ? "Show CSS" : "Show HTML"}
-        </AppCode.ButtonToggle>
-        <AppCode.ButtonCopy
+        </button>
+        <button
+          className={buttonCopy}
           onClick={copy}
           role="region"
           id="codeCopyStatus"
           type="button"
         >
           {codeWasCopied ? "Code Copied" : "Copy to Clipboard"}
-        </AppCode.ButtonCopy>
+        </button>
         <div id="code" ref={codeRef}>
           {showHtml ? (
             <p>
               &lt;
-              <AppCode.CName>div</AppCode.CName>
-              <AppCode.CProps> class="parent"</AppCode.CProps>&gt;
+              <span className={cName}>div</span>
+              <span className={cProps}> class="parent"</span>&gt;
               <br />
               {childArea.length > 0 ? (
                 <span>
-                  {childArea.map((area, i) => (
-                    <span key={area}>
-                      <AppCode.Sp>
-                        &lt;<AppCode.CName>div</AppCode.CName>
-                        <AppCode.CProps>
+                  {childArea.map((_area, i) => (
+                    <span key={i}>
+                      <span className={sp}>
+                        &lt;<span className={cName}>div</span>
+                        <span className={cProps}>
                           &nbsp;class="div{i + 1}"
-                        </AppCode.CProps>
-                        &gt;&lt;/<AppCode.CName>div</AppCode.CName>&gt;
-                      </AppCode.Sp>
+                        </span>
+                        &gt;&lt;/<span className={cName}>div</span>&gt;
+                      </span>
                       <br />
                     </span>
                   ))}
@@ -75,38 +91,38 @@ export default function AppCodeContainer() {
                   <br />
                 </span>
               )}
-              &lt;/<AppCode.CName>div</AppCode.CName>&gt;
+              &lt;/<span className={cName}>div</span>&gt;
             </p>
           ) : (
             <>
               <p>
-                <AppCode.CName>.parent</AppCode.CName>
+                <span className={cName}>.parent</span>
                 {"{"}
                 <br />
-                <AppCode.Sp>
-                  <AppCode.CKey>display</AppCode.CKey>:
-                  <AppCode.CProps>grid</AppCode.CProps>;
-                </AppCode.Sp>
+                <span className={sp}>
+                  <span className={cKey}>display</span>:
+                  <span className={cProps}>grid</span>;
+                </span>
                 <br />
-                <AppCode.Sp>
-                  <AppCode.CKey>grid-template-columns</AppCode.CKey>:
-                  <AppCode.CProps>{columnTemplate}</AppCode.CProps>;
-                </AppCode.Sp>
+                <span className={sp}>
+                  <span className={cKey}>grid-template-columns</span>:
+                  <span className={cProps}>{columnTemplate}</span>;
+                </span>
                 <br />
-                <AppCode.Sp>
-                  <AppCode.CKey>grid-template-rows</AppCode.CKey>:
-                  <AppCode.CProps>{rowTemplate}</AppCode.CProps>;
-                </AppCode.Sp>
+                <span className={sp}>
+                  <span className={cKey}>grid-template-rows</span>:
+                  <span className={cProps}>{rowTemplate}</span>;
+                </span>
                 <br />
-                <AppCode.Sp>
-                  <AppCode.CKey>grid-column-gap</AppCode.CKey>:
-                  <AppCode.CProps>{columnGap}px;</AppCode.CProps>
-                </AppCode.Sp>
+                <span className={sp}>
+                  <span className={cKey}>grid-column-gap</span>:
+                  <span className={cProps}>{columnGap}px;</span>
+                </span>
                 <br />
-                <AppCode.Sp>
-                  <AppCode.CKey>grid-row-gap</AppCode.CKey>:
-                  <AppCode.CProps>{rowGap}px</AppCode.CProps>;
-                </AppCode.Sp>
+                <span className={sp}>
+                  <span className={cKey}>grid-row-gap</span>:
+                  <span className={cProps}>{rowGap}px</span>;
+                </span>
                 <br />
                 {"}"}
               </p>
@@ -115,10 +131,10 @@ export default function AppCodeContainer() {
                   <span>
                     {childArea.map((area, i) => (
                       <span key={area}>
-                        <AppCode.CName>.div{i + 1}</AppCode.CName>
+                        <span className={cName}>.div{i + 1}</span>
                         {"{"}
-                        <AppCode.CKey>grid-area: </AppCode.CKey>
-                        <AppCode.CProps>{area}</AppCode.CProps>
+                        <span className={cKey}>grid-area: </span>
+                        <span className={cProps}>{area}</span>
                         {"}"}
                         <br />
                       </span>
@@ -129,7 +145,7 @@ export default function AppCodeContainer() {
             </>
           )}
         </div>
-      </AppCode.GridCode>
+      </div>
     </AppCode>
   );
 }

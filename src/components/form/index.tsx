@@ -1,31 +1,11 @@
-import React, { useContext, useState } from "react";
-import styled from "styled-components";
+import { useContext, useState } from "react";
 
 import { AppModal, AppExplain } from "../index";
 import AppCodeContainer from "../../container/code";
 
 import GridContext from "../../context/gridContext";
 import FormContext from "../../context/formContext";
-
-const StyledWat = styled.p`
-  font-family: "Caveat", cursive;
-  font-size: 22px;
-  margin-top: 18px;
-  color: #a8c9cc;
-  opacity: 0.9;
-  font-weight: normal;
-  cursor: pointer;
-`;
-
-const StyledControlPanel = styled.aside`
-  margin: 60px 60px;
-  font-size: 17px;
-  width: 300px;
-  @media screen and (max-width: 700px) {
-    width: 80vw;
-    margin: 100px 50px;
-  }
-`;
+import { Button, Input, Label, Fieldset } from "../ui";
 
 export default function AppForm() {
   let {
@@ -43,10 +23,10 @@ export default function AppForm() {
   let [explainModalStatus, setExplainModalStatus] = useState(false);
   let [codeModalStatus, setCodeModalStatus] = useState(false);
   return (
-    <StyledControlPanel>
-      <fieldset>
-        <label htmlFor="columns">Columns</label>
-        <input
+    <aside className="m-[60px] text-[17px] w-[300px] max-tablet:w-[80vw] max-tablet:mx-[50px] max-tablet:my-[100px]">
+      <Fieldset>
+        <Label htmlFor="columns">Columns</Label>
+        <Input
           id="columns"
           type="number"
           min={0}
@@ -54,10 +34,10 @@ export default function AppForm() {
           value={columns}
           onChange={(event) => setColumns(+event.target.value)}
         />
-      </fieldset>
-      <fieldset>
-        <label htmlFor="rows">Rows</label>
-        <input
+      </Fieldset>
+      <Fieldset>
+        <Label htmlFor="rows">Rows</Label>
+        <Input
           id="rows"
           type="number"
           min={0}
@@ -65,10 +45,10 @@ export default function AppForm() {
           value={rows}
           onChange={(event) => setRows(+event.target.value)}
         />
-      </fieldset>
-      <fieldset>
-        <label htmlFor="column-gap">Column Gap</label>
-        <input
+      </Fieldset>
+      <Fieldset>
+        <Label htmlFor="column-gap">Column Gap</Label>
+        <Input
           id="column-gap"
           type="number"
           min={0}
@@ -76,10 +56,10 @@ export default function AppForm() {
           value={columnGap}
           onChange={(event) => setColumnGap(+event.target.value)}
         />
-      </fieldset>
-      <fieldset>
-        <label htmlFor="row-gap">Row Gap</label>
-        <input
+      </Fieldset>
+      <Fieldset>
+        <Label htmlFor="row-gap">Row Gap</Label>
+        <Input
           id="row-gap"
           type="number"
           min={0}
@@ -87,13 +67,17 @@ export default function AppForm() {
           value={rowGap}
           onChange={(event) => setRowGap(+event.target.value)}
         />
-      </fieldset>
-      <button onClick={() => setCodeModalStatus(true)}>
+      </Fieldset>
+      <Button onClick={() => setCodeModalStatus(true)}>
         Please may I have some code
-      </button>
-      <button type="reset" onClick={() => setChildArea([])}>
+      </Button>
+      <Button
+        variant="reset"
+        type="reset"
+        onClick={() => setChildArea([])}
+      >
         Reset Grid
-      </button>
+      </Button>
       <AppModal modalHandler={setCodeModalStatus} modalStatus={codeModalStatus}>
         <AppModal.Header>
           <h3>Your Grid Code</h3>
@@ -102,9 +86,12 @@ export default function AppForm() {
           <AppCodeContainer />
         </AppModal.Section>
       </AppModal>
-      <StyledWat onClick={() => setExplainModalStatus(true)}>
+      <p
+        className="font-cursive text-[22px] mt-[18px] text-wat opacity-90 font-normal cursor-pointer"
+        onClick={() => setExplainModalStatus(true)}
+      >
         What does this project do?
-      </StyledWat>
+      </p>
       <AppModal
         modalHandler={setExplainModalStatus}
         modalStatus={explainModalStatus}
@@ -116,6 +103,6 @@ export default function AppForm() {
           <AppExplain />
         </AppModal.Section>
       </AppModal>
-    </StyledControlPanel>
+    </aside>
   );
 }

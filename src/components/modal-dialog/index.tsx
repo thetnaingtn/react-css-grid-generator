@@ -1,71 +1,10 @@
-import React, {
+import {
   useEffect,
   useCallback,
   ReactNode,
   PropsWithChildren,
 } from "react";
-import styled from "styled-components";
-
-/* 
-	modal styled components 
-	start
-*/
-const StyledModalMask = styled.div`
-  position: fixed;
-  z-index: 100;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0.7);
-  display: grid;
-  grid-template: 1fr auto 1fr / 1fr auto 1fr;
-  overflow: auto;
-  transition: opacity 0.25s ease;
-`;
-
-const StyledModalWrapper = styled.div`
-  grid-area: 2 / 2 / 2 / 2;
-`;
-
-const StyledModalContainer = styled.div`
-  position: relative;
-  width: 80vw;
-  max-width: 700px;
-  padding: 0px 50px 60px;
-  background-color: #192d38;
-  border-radius: 5px;
-  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.8);
-  transition: all 0.3s ease;
-  border: 1px solid black;
-
-  @media screen and (max-width: 700px) {
-    padding: 0px 20px 20px;
-    width: calc(100% - 40px);
-  }
-`;
-
-const StyledModalButton = styled.button`
-  margin: 40px auto;
-  display: table;
-
-  @media screen and (max-width: 700px) {
-    margin: 20px auto 0;
-  }
-`;
-
-const StyledModalHeader = styled.header`
-  font-size: 1.5em;
-  text-align: center;
-`;
-const StyledModalBody = styled.section`
-  margin: 20px 0;
-`;
-
-/* 
-	modal styled components 
-	end
-*/
+import { Button } from "../ui";
 
 type AppModalType = {
   modalHandler: (val: boolean) => void;
@@ -93,25 +32,39 @@ const AppModal = function ({
 
   if (!modalStatus) return null;
   return (
-    <StyledModalMask>
-      <StyledModalWrapper>
-        <StyledModalContainer role="dialog">
+    <div className="fixed z-[100] top-0 left-0 w-full h-full bg-black/70 grid [grid-template:1fr_auto_1fr/1fr_auto_1fr] overflow-auto transition-opacity duration-[0.25s] ease">
+      <div className="[grid-area:2/2/2/2]">
+        <div
+          role="dialog"
+          className="relative w-[80vw] max-w-[700px] px-[50px] pt-0 pb-[60px] bg-bg-start rounded-[5px] shadow-[0_2px_20px_rgba(0,0,0,0.8)] transition-all duration-300 ease border border-black max-tablet:px-5 max-tablet:pt-0 max-tablet:pb-5 max-tablet:w-[calc(100%-40px)]"
+        >
           {children}
-          <StyledModalButton onClick={() => modalHandler(false)}>
+          <Button
+            onClick={() => modalHandler(false)}
+            className="mx-auto my-10 table max-tablet:mt-5 max-tablet:mb-0"
+          >
             Done
-          </StyledModalButton>
-        </StyledModalContainer>
-      </StyledModalWrapper>
-    </StyledModalMask>
+          </Button>
+        </div>
+      </div>
+    </div>
   );
 };
 
 AppModal.Header = function ({ children }: { children: ReactNode }) {
-  return <StyledModalHeader id="modalTitle">{children}</StyledModalHeader>;
+  return (
+    <header id="modalTitle" className="text-[1.5em] text-center">
+      {children}
+    </header>
+  );
 };
 
 AppModal.Section = function ({ children }: { children: ReactNode }) {
-  return <StyledModalBody id="modalDescription">{children}</StyledModalBody>;
+  return (
+    <section id="modalDescription" className="my-5">
+      {children}
+    </section>
+  );
 };
 
 export default AppModal;
