@@ -1,0 +1,83 @@
+@import "tailwindcss";
+
+@theme {
+  --color-teal: #08ffbd;
+  --color-grey: #aaaaaa;
+  --color-bg-start: #192d38;
+  --color-bg-end: #211f2f;
+  --color-panel-start: #131321;
+  --color-panel-end: #1f1c2c;
+  --color-input-bg: #211f2f;
+  --color-input-border: #666666;
+  --color-error-bg: #6d1a39;
+  --color-code-name: #ffea18;
+  --color-code-props: #f8a384;
+  --color-code-key: #6af2d7;
+  --color-accent-yellow: #ffd908;
+  --color-accent-orange: #fb7826;
+  --color-wat: #a8c9cc;
+  --color-copy-btn: #0f8a8ab3;
+
+  --font-sans: "Mukta Mahee", Helvetica, Arial, sans-serif;
+  --font-cursive: "Caveat", cursive;
+  --font-mono: "Roboto Mono", Courier, monospace;
+
+  --breakpoint-tablet: 700px;
+}
+
+html {
+  --grey: #aaaaaa;
+  --teal: #08ffbd;
+  --gray: var(--grey, #aaaaaa);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
+}
+
+body {
+  width: 100%;
+  height: 90vh;
+  padding: 0;
+  margin: 0;
+  background: radial-gradient(ellipse at center, #192d38 0%, #211f2f 100%);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  color: white;
+  font-weight: 300;
+}
+
+strong {
+  color: var(--color-accent-yellow);
+}
+
+a,
+a:visited,
+a:active {
+  color: var(--color-teal);
+  text-decoration: none;
+}
+
+.grid-children-area {
+  counter-reset: step;
+}
+
+.grid-child {
+  counter-increment: step;
+}
+
+.grid-child::before {
+  position: absolute;
+  content: ".div" counter(step);
+  display: block;
+  padding: 0 5px;
+  text-align: center;
+  color: white;
+}

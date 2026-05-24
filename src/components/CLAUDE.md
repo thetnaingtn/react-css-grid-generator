@@ -4,11 +4,7 @@ Guidance for Claude Code when working in `src/components/`.
 
 ## Layout
 
-Each component lives in its own folder with:
-- `index.tsx` — default-exported React function component
-- `styles.ts` (or legacy `styles.js`) — `styled-components/macro` styled elements
-
-A few files (e.g. `form/styles.js`) are still JavaScript; the repo is mid-migration to TypeScript. New styles files must be `.ts`.
+Each component lives in its own folder with an `index.tsx` (default-exported React function component). Styling is inline via Tailwind CSS v4 classes on the JSX — no separate `styles.*` files.
 
 ## Exports
 
@@ -16,8 +12,9 @@ A few files (e.g. `form/styles.js`) are still JavaScript; the repo is mid-migrat
 
 ## Styling
 
-- Use `styled-components/macro` (not `styled-components`) so generated class names are readable.
-- Styled elements that take dynamic props must have a typed prop interface in `styles.ts` (see `grid/styles.ts` for the pattern: a `GapType` base extended per element).
+- Use Tailwind utility classes on JSX. Theme tokens (colors, fonts, the `tablet` breakpoint) live in `src/index.css` under `@theme`.
+- Shared form-control primitives (`Button`, `Input`, `Label`, `Fieldset`) live in `src/components/ui/`. `Button` exposes a `variant` prop (`"primary" | "reset"`, default `"primary"`) via `class-variance-authority`. All four accept an extra `className` that is merged with `clsx`. Reuse these rather than re-deriving the styles on raw `<button>` / `<input>` elements.
+- For CSS that depends on runtime values (grid track templates, gap values, per-child colors), use inline `style={{}}` — Tailwind cannot express runtime-computed strings.
 
 ## State
 
