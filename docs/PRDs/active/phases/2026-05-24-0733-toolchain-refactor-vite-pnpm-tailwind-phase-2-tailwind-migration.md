@@ -13,6 +13,8 @@
 
 Replace the entire `styled-components` styling system with Tailwind CSS v4, wired through `@tailwindcss/vite` (no PostCSS pipeline). Every `styles.{ts,js}` file is deleted and the corresponding markup gets inline Tailwind class names. By the end of this phase, `styled-components` and `@types/styled-components` are removed from `package.json`, the `form/styles.js` legacy file is gone (finishing the TypeScript migration), and the UI is pixel-identical to `main`.
 
+**Heads-up from Phase 1:** `styled-components/macro` imports were already rewritten to plain `styled-components` during Phase 1 (Rolldown rejected the macro entry's missing `css` ESM export). No `/macro` references remain in source — Phase 2 just deletes the styled-components code wholesale.
+
 Dynamic CSS values (e.g. `grid-template-columns` strings computed from user input) stay as inline `style={{}}` props — Tailwind cannot express runtime-computed track strings.
 
 ## Scope
@@ -312,7 +314,7 @@ test ! -e postcss.config.js && test ! -e postcss.config.cjs && test ! -e postcss
 | Dynamic grid track strings can't be expressed in Tailwind | Certain | Use inline `style={{ gridTemplateColumns: columnTemplate }}` — already called out in PRD risks |
 | `@tailwindcss/vite` peer-dep mismatch with Vite 8 | Medium | If install fails, fall back to Vite 7 (PRD risk row) — do NOT switch to PostCSS |
 | Compound component pattern in `AppCode.X` breaks during refactor | Medium | Keep the compound API by wrapping each `<span>`/`<div>` in a named functional component; update tests in Phase 3 if needed |
-| `styled-components/macro` removal leaves dangling `babel-plugin-styled-components` references | Low | Search `package.json` and any leftover `.babelrc` — delete |
+| `styled-components/macro` removal leaves dangling `babel-plugin-styled-components` references | Low | Search `package.json` and any leftover `.babelrc` — delete. (Phase 1 already rewrote all `/macro` imports to plain `styled-components`; only the package.json dep cleanup remains here) |
 
 ## Open Questions
 

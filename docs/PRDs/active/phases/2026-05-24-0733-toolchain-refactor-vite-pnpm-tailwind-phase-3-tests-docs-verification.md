@@ -19,7 +19,8 @@ This phase produces the first real automated test coverage the repo has had — 
 
 ### In Scope
 
-- Rewrite `src/setupTests.ts` for Vitest (`@testing-library/jest-dom/vitest`)
+- Expand `src/setupTests.ts` for Vitest — file already exists from Phase 1 with `import "@testing-library/jest-dom/vitest"`; add any further Vitest 4 setup here
+- Re-tighten the ESLint rules Phase 1 demoted (`prefer-const`, `react/no-unescaped-entities`, `react/display-name`, `@typescript-eslint/no-empty-object-type`, `no-unused-vars`, `no-explicit-any`) once styled-components code is gone
 - Add a smoke test for `<App />` that renders the app under both providers and asserts the header is present
 - Add unit tests for `src/utils/validatator.ts` (`fr`, `px`, `auto`, an invalid unit) and `src/utils/repetition.ts` (`groupRepeatedUnits` + `createRepetition` round-trip)
 - Address any React 18 Strict Mode warnings logged during Phases 1–2 manual smoke tests (typically in `gridContext` effects)

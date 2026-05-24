@@ -1,7 +1,7 @@
 # Toolchain Refactor: Vite 8 + pnpm + Tailwind CSS
 
 **PRD ID**: PRD-2026-05-24-0733
-**Status**: Draft
+**Status**: Phase 1 implemented (pending in-browser smoke test); Phases 2–3 not started
 **Complexity**: High
 **Created**: May 24, 2026
 **Author**: thetnaingtn
@@ -18,7 +18,7 @@ The TypeScript migration is partially done (a few `.js` files remain, e.g. `src/
 
 Replace the toolchain end-to-end while keeping app behavior identical:
 
-1. Swap **CRA → Vite 8** with the React plugin and TypeScript already enabled.
+1. Swap **CRA → Vite 8** (Rolldown-bundled, Rust-powered) with `@vitejs/plugin-react@^6` (oxc-based, no Babel) and TypeScript already enabled.
 2. Swap **Yarn → pnpm**; delete `yarn.lock`, commit `pnpm-lock.yaml`.
 3. Swap **styled-components → Tailwind CSS** (utility-first); delete all `styles.ts` / `styles.js` files and inline classNames on the JSX they previously styled.
 4. Bump **React 17 → React 18** (`createRoot` API) as part of the same change, since Vite scaffolding assumes it.
@@ -34,7 +34,7 @@ _To be completed after implementation._
 
 ### In Scope
 
-- Replace `react-scripts` with Vite 8 + `@vitejs/plugin-react`
+- Replace `react-scripts` with Vite 8 (Rolldown-bundled) + `@vitejs/plugin-react@^6` (oxc-based; no Babel runtime dependency)
 - Migrate `package.json` scripts (`start` → `dev`, `build`, `preview`, `test`)
 - Move `public/index.html` to project root as Vite expects, with `%PUBLIC_URL%` swapped for Vite-style asset references
 - Switch package manager to pnpm; add `packageManager` field and `engines`
@@ -77,7 +77,7 @@ flowchart LR
     A4[Yarn Classic] --> A2
   end
   subgraph After
-    B1[vite dev/build] --> B2[esbuild + Rollup]
+    B1[vite 8 dev/build] --> B2[Rolldown + oxc]
     B2 --> B3[Tailwind CSS static utility classes]
     B4[pnpm] --> B2
     B5[Vitest] -.test.-> B2
@@ -100,7 +100,7 @@ flowchart LR
 | Models      | n/a — no backend                                                                                    |
 | Routes      | n/a — no backend                                                                                    |
 | Build       | `react-scripts` removed; `vite.config.ts` added with `@vitejs/plugin-react` and `@tailwindcss/vite` |
-| Tooling     | `pnpm-lock.yaml` replaces `yarn.lock`; `packageManager: "pnpm@9.x"` declared in `package.json`      |
+| Tooling     | `pnpm-lock.yaml` replaces `yarn.lock`; `packageManager: "pnpm@11.1.2"` declared in `package.json`; `pnpm-workspace.yaml` + `.npmrc` added for pnpm 11 build-approval gating |
 
 ### Frontend
 
@@ -118,20 +118,21 @@ flowchart LR
 
 ## Implementation
 
-### Phase 1: Toolchain swap (Vite + pnpm + React 18)
+### Phase 1: Toolchain swap (Vite + pnpm + React 18) — **complete (pending in-browser smoke test)**
 
-- [ ] Delete `yarn.lock`; add `packageManager: "pnpm@9.x"` and `engines.node` to `package.json`
-- [ ] Remove `react-scripts`, `@testing-library/*` Jest-bound versions, and CRA-specific eslint config from `package.json`
-- [ ] Add `vite@^8`, `@vitejs/plugin-react`, `vitest`, `@vitest/ui`, `jsdom`, `@testing-library/react@latest`, `@testing-library/jest-dom@latest`
-- [ ] Bump `react` and `react-dom` to `^18`; update `@types/react` and `@types/react-dom` to v18
-- [ ] Create `vite.config.ts` with React plugin, test config (`jsdom`, `globals: true`, `setupFiles`)
-- [ ] Move `public/index.html` → `index.html` at project root; rewrite `%PUBLIC_URL%/favicon.ico` style refs to `/favicon.ico` and add `<script type="module" src="/src/index.tsx">`
-- [ ] Update `src/index.tsx` to use `createRoot(document.getElementById('root')!).render(...)`
-- [ ] Update `tsconfig.json` for Vite (`"types": ["vite/client", "vitest/globals"]`, `moduleResolution: "bundler"`)
-- [ ] Add `tsconfig.node.json` for `vite.config.ts`
-- [ ] Replace scripts in `package.json`: `dev: vite`, `build: tsc -b && vite build`, `preview: vite preview`, `test: vitest`, `lint: eslint .`
-- [ ] Replace CRA's inline ESLint config with a flat `eslint.config.js` (`@typescript-eslint`, `eslint-plugin-react-hooks`, `eslint-plugin-react-refresh`)
-- [ ] Run `pnpm install`; verify `pnpm dev`, `pnpm build`, and `pnpm preview` all succeed
+See `docs/PRDs/active/phases/2026-05-24-0733-toolchain-refactor-vite-pnpm-tailwind-phase-1-toolchain-swap.md` for full task list and implementation notes. Key changes from this top-level outline:
+
+- pnpm pinned to **`@11.1.2`** (not 9.x). pnpm 11's build-approval model requires `pnpm-workspace.yaml` `allowBuilds: { esbuild: true }` plus `.npmrc` `verify-deps-before-run=false`.
+- React plugin pinned to **`@vitejs/plugin-react@^6`** (oxc-powered, Rolldown-aligned). The 4.x line still works against Vite 8 but emits a per-build Babel deprecation warning; v6 removes it.
+- Vitest pinned to **`@4`** (not the unversioned suggestion). Vitest 2.x ships Vite 5 type defs that conflict with Vite 8 under project references.
+- `vite.config.ts` imports `defineConfig` from `"vitest/config"` (the triple-slash `/// <reference types="vitest" />` workaround did not augment Vite 8's `UserConfig`).
+- `tsconfig.node.json` uses `composite: true` + `emitDeclarationOnly: true` + an out-of-tree `outDir` (composite projects forbid `noEmit`).
+- `tsconfig.json` `types` is `["vite/client"]` only — `vitest/globals` is unnecessary since the config imports from `vitest/config` directly.
+- **`styled-components/macro` imports were rewritten to plain `styled-components` in Phase 1** because Rolldown fails the build on the missing `css` ESM export. Phase 2 still deletes the styled-components code entirely.
+- Flat ESLint config demotes several legacy rules (`prefer-const`, `react/no-unescaped-entities`, `react/display-name`, `@typescript-eslint/no-empty-object-type`) to keep this phase free of unrelated cleanup. Phase 3 re-enables them.
+- `.gitignore` now ignores `/dist` and `*.tsbuildinfo`.
+
+- [x] All Phase 1 implementation tasks (1–10) completed; lint, typecheck, build, dev, and preview all green. Interactive UI smoke test still pending.
 
 ### Phase 2: Tailwind setup + styled-components removal
 
@@ -148,10 +149,12 @@ flowchart LR
 - [ ] Migrate `src/container/wrapper.ts` → inline Tailwind in `App.tsx`; delete the file
 - [ ] Remove `styled-components`, `@types/styled-components`, `babel-plugin-styled-components` from `package.json`
 - [ ] `grep -r "styled-components"` returns zero results; `grep -r "\.styles"` only matches CSS files or comments
+- [ ] Note: `styled-components/macro` imports were already rewritten to plain `styled-components` in Phase 1 (Rolldown build constraint) — no `/macro` references remain to clean up
 
 ### Phase 3: Tests, docs, and verification
 
-- [ ] Convert any existing `*.test.tsx` from Jest globals to Vitest (likely zero or one file — CRA template default)
+- [ ] Convert any existing `*.test.tsx` from Jest globals to Vitest (likely zero or one file — CRA template default). Vitest is installed at **v4**; verify import paths against Vitest 4 API
+- [ ] Re-tighten the ESLint rules demoted in Phase 1's `eslint.config.js`: `prefer-const`, `react/no-unescaped-entities`, `react/display-name`, `@typescript-eslint/no-empty-object-type` back to errors; `no-unused-vars` / `no-explicit-any` back to errors (most violations live in `styled-components` files deleted by Phase 2)
 - [ ] Add a smoke test that renders `<App />` and asserts the header is in the document
 - [ ] Add a Vitest test for `utils/validatator.ts` (covers `fr`, `px`, `auto`, and an invalid unit)
 - [ ] Add a Vitest test for `utils/repetition.ts` (`groupRepeatedUnits` + `createRepetition` round-trip)
@@ -208,7 +211,7 @@ pnpm preview
 
 | Risk                                                                                            | Likelihood | Mitigation                                                                                                                       |
 | ----------------------------------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| Vite 8 is very new; plugin ecosystem (`@tailwindcss/vite`, Vitest) may have integration bugs    | Medium     | Pin exact versions; have a fallback plan to Vite 7 if a blocker appears                                                          |
+| Vite 8 is very new; plugin ecosystem (`@tailwindcss/vite`, Vitest, `@vitejs/plugin-react`) may have integration bugs | Medium     | Pin exact versions; use `@vitejs/plugin-react@^6` (oxc) which is the version aligned with Vite 8's Rolldown bundler; fallback plan to Vite 7 if a blocker appears |
 | `@tailwindcss/vite` peer-deps may lag behind Vite 8 majors                                      | Medium     | Check `@tailwindcss/vite` release notes before install; if incompatible, temporarily fall back to Vite 7 (do not switch to PostCSS) |
 | Tailwind class soup makes complex grid styles (dynamic `grid-template-columns`) hard to express | High       | Use inline `style={{ gridTemplateColumns: columnTemplate }}` for genuinely dynamic values; Tailwind only for static classes      |
 | React 18's strict-mode double-invocation exposes bugs in `useEffect` chains (esp. `gridContext`) | Medium     | Test grid context effects in dev with `<StrictMode>`; fix any double-fire issues before declaring done                           |
@@ -237,7 +240,7 @@ pnpm preview
 
 | Category   | Files                                                                                          | Description                                                                                  |
 | ---------- | ---------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------- |
-| Tooling    | `package.json`, `pnpm-lock.yaml` (new), `yarn.lock` (deleted)                                  | Switch package manager, drop CRA deps, add Vite/Vitest/Tailwind                              |
+| Tooling    | `package.json`, `pnpm-lock.yaml` (new), `yarn.lock` (deleted), `pnpm-workspace.yaml` (new), `.npmrc` (new) | Switch package manager, drop CRA deps, add Vite/Vitest/Tailwind; pnpm 11 build-approval config |
 | Build      | `vite.config.ts` (new), `tsconfig.json`, `tsconfig.node.json` (new), `eslint.config.js` (new)  | Vite config, TS bundler resolution, flat ESLint                                              |
 | HTML       | `index.html` (moved from `public/`), `public/` (asset-only)                                   | Vite entry HTML at project root                                                              |
 | Styling    | `src/index.css` (new), `src/global-styles.ts` (deleted), all `src/**/styles.{ts,js}` (deleted) | Tailwind v4 entry; remove styled-components artifacts                                        |
